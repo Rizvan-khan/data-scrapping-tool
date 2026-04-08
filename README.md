@@ -186,4 +186,3 @@ This project is for educational and development purposes. Ensure compliance with
 
 ---
 
-🔥 Built with passion to learn, scale, and earn.
