@@ -12,15 +12,15 @@ const menuData = [
     name: "Actors",
     icon: "⚡",
     children: [
-      { name: "All Actors", path: "/admin/actors" },
-      { name: "Create Actor", path: "/admin/actors/create" },
+      { name: "Search Data", path: "search/data" },
+      // { name: "Create Actor", path: "/admin/actors/create" },
     ],
   },
   {
     name: "Runs",
     icon: "▶️",
     children: [
-      { name: "All Runs", path: "/admin/runs" },
+      // { name: "All Runs", path: "/admin/runs" },
       { name: "History", path: "/admin/runs/history" },
     ],
   },
