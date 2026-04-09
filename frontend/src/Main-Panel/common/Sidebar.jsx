@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation,useNavigate } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
+
 
 const menuData = [
   {
@@ -30,6 +31,16 @@ export default function MainSidebar() {
   const [openMenus, setOpenMenus] = useState({});
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // 1. Token delete karo
+    localStorage.removeItem("token");
+    
+    // 2. User ko login page par bhej do
+    navigate("/login");
+  };
 
   const toggleMenu = (i) => {
     setOpenMenus((prev) => ({ ...prev, [i]: !prev[i] }));
@@ -110,13 +121,13 @@ export default function MainSidebar() {
       {/* Bottom Card */}
       {!collapsed && (
         <div className="p-4 border-t border-slate-800">
-          {/* <div className="bg-slate-800 p-3 rounded-xl text-sm">
-            <p className="text-slate-400">RAM Usage</p>
-            <p className="font-semibold">0 MB / 8 GB</p>
-            <button className="mt-2 w-full bg-indigo-500 py-1 rounded-md hover:bg-indigo-600 transition">
-              Upgrade
+          <div className="bg-slate-800 p-3 rounded-xl text-sm">
+            {/* <p className="text-slate-400">RAM Usage</p>
+            <p className="font-semibold">0 MB / 8 GB</p> */}
+            <button onClick={handleLogout} className="mt-2 w-full bg-indigo-500 py-1 rounded-md hover:bg-indigo-600 transition">
+              Sing Out
             </button>
-          </div> */}
+          </div>
         </div>
       )}
     </div>
