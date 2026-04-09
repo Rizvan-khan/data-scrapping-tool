@@ -30,4 +30,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+public function scrapeResults()
+{
+    return $this->hasMany(ScrapeResult::class);
+}
+
+
 }
