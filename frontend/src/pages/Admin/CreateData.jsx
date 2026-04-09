@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, MapPin, List, Plus, X } from 'lucide-react'; // Icons ke liye lucide-react use kiya hai
+import { Search, MapPin, List, Plus, X } from 'lucide-react';
+import axios from 'axios' // Icons ke liye lucide-react use kiya hai
 
 function CreateData() {
     const navigate = useNavigate();
@@ -19,25 +20,66 @@ function CreateData() {
     setSearchTerms(newTerms);
   };
 
- const handleSearch = (e) => {
-    e.preventDefault();
-    
-    // Yahan aap apna API call logic likh sakte hain
-    console.log("Searching for:", { searchTerms, location, limit });
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
 
-    // 3. Navigate to result page
-    // Hum '/admin/search/result' par bhej rahe hain
-    navigate('/admin/search/result/data'); 
-  };
+const handleSearch = async (e) => {
+  e.preventDefault();
 
+  setLoading(true);
+  setError("");
+
+  try {
+    // Multiple search terms ko loop karenge
+    for (let term of searchTerms) {
+      if (!term.trim()) continue;
+
+      await axios.post("http://127.0.0.1:8000/api/scrape", {
+        keyword: term,
+        location: location,
+        limit: Number(limit),
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // agar auth use kar raha hai
+          "Content-Type": "application/json"
+        }
+      });
+    }
+
+    // console.log(response.data);
+
+    // Success → redirect
+    navigate("/admin/search/result/data");
+
+  } catch (err) {
+    console.log(err);
+
+    if (err.response) {
+      // Laravel validation errors
+      setError(
+        err.response.data.message ||
+        "Something went wrong"
+      );
+    } else {
+      setError("Server not responding");
+    }
+
+  } finally {
+    setLoading(false);
+  }
+};
   return (
-    <div className="max-w-4xl  p-6 bg-[#121212] text-gray-300 min-h-screen">
+    <div className="max-w-4xl  p-6 bg-[#0a0a0a] text-gray-300 min-h-screen">
       {/* Header Info */}
       <p className="text-sm mb-6">
         Sections with <span className="font-bold">asterisk*</span> are just alternative ways to start the input 
         (🛰️ Geolocation parameters, 🗺️ Polygons, 🔗 URLs). They can be combined with any of the features and sorting options from the Filters section.
       </p>
-
+{error && (
+  <div className="bg-red-500/20 text-red-400 p-3 rounded-md">
+    {error}
+  </div>
+)}
       <form onSubmit={handleSearch} className="space-y-8">
         
         {/* Search Terms Section */}
@@ -118,12 +160,13 @@ function CreateData() {
         </div>
 
         {/* Submit Button (Optional but recommended) */}
-        <button 
-          type="submit"
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-md transition-all shadow-lg"
-        >
-          Start Extraction
-        </button>
+       <button 
+  type="submit"
+  disabled={loading}
+  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-md transition-all shadow-lg disabled:opacity-50"
+>
+  {loading ? "Scraping..." : "Start Extraction"}
+</button>
 
       </form>
     </div>
