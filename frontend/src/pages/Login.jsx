@@ -55,7 +55,7 @@ export default function Login() {
         )}
 
         <div className="text-center mt-4 mb-8">
-          <h2 className="text-3xl font-bold text-gray-800">Admin Login</h2>
+          <h2 className="text-3xl font-bold text-gray-800"> Login Here</h2>
           <p className="text-gray-500 mt-2">Enter your credentials to manage dashboard</p>
         </div>
 

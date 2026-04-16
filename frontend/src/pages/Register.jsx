@@ -28,7 +28,7 @@ export default function Register() {
       
       showMessage("Account Created Successfully! 🔥", "success");
       
-      setTimeout(() => navigate("/dashboard"), 1500);
+      setTimeout(() => navigate("/admin"), 1500);
     } catch (err) {
       const errorMsg = err.response?.data?.message || "Registration Failed!";
       showMessage(errorMsg, "error");
