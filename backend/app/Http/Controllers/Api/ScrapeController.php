@@ -59,6 +59,16 @@ class ScrapeController extends Controller
     }
 
     // 📊 Get Results (User-wise + Pagination)
+
+
+public function getsearchresultinstant (Request $request){
+// 
+}
+
+
+
+
+
     public function getResults(Request $request)
     {
         $data = ScrapeResult::where('user_id', auth()->id())
