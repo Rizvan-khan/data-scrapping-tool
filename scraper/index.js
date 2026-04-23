@@ -5,76 +5,97 @@ const app = express();
 app.use(express.json());
 
 app.post("/scrape", async (req, res) => {
-  const { keyword, location } = req.body;
+  const { keyword, location, limit = 50 } = req.body;
+
+  const maxLimit = Math.min(limit, 100);
+
+  if (!keyword || !location) {
+    return res.status(400).json({ status: "error", message: "Missing params" });
+  }
+
   const searchQuery = encodeURIComponent(`${keyword} in ${location}`);
   const url = `https://www.google.com/maps/search/${searchQuery}`;
 
-  const browser = await puppeteer.launch({ 
-    headless: "new", 
-    args: ["--no-sandbox"] 
-  });
-  
-  const page = await browser.newPage();
+  let browser;
 
   try {
-    await page.goto(url, { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector("div[role='article']", { timeout: 10000 });
-
-    // Quick Scroll for results
-    await page.evaluate(async () => {
-      const feed = document.querySelector("div[role='feed']");
-      if (feed) {
-        for (let i = 0; i < 4; i++) { 
-          feed.scrollBy(0, 1000);
-          await new Promise(r => setTimeout(r, 700));
-        }
-      }
+    browser = await puppeteer.launch({
+      headless: "new",
+      args: ["--no-sandbox"]
     });
 
-    const data = await page.evaluate(() => {
+    const page = await browser.newPage();
+
+    await page.goto(url, { waitUntil: "domcontentloaded" });
+
+    await page.waitForSelector("div[role='article']", { timeout: 15000 });
+
+    // 🔥 Smart scroll
+    await page.evaluate(async (maxLimit) => {
+      const feed = document.querySelector("div[role='feed']");
+      if (!feed) return;
+
+      let lastCount = 0;
+
+      while (true) {
+        feed.scrollBy(0, 1500);
+        await new Promise(r => setTimeout(r, 700));
+
+        const currentCount = feed.querySelectorAll("div[role='article']").length;
+
+        if (currentCount >= maxLimit) break;
+        if (currentCount === lastCount) break;
+
+        lastCount = currentCount;
+      }
+    }, maxLimit);
+
+    const data = await page.evaluate((maxLimit) => {
       const items = Array.from(document.querySelectorAll("div[role='article']"));
-      
-      return items.map(el => {
+
+      return items.slice(0, maxLimit).map(el => {
         const name = el.querySelector(".fontHeadlineSmall")?.innerText.trim() || "N/A";
         const ratingElement = el.querySelector(".MW4Y7e")?.ariaLabel;
-        const allTextParts = el.innerText.split('\n').map(t => t.trim()).filter(t => t.length > 0);
-        
-        // Regex for Clean Phone Number
+        const allTextParts = el.innerText.split('\n').map(t => t.trim()).filter(t => t);
+
         const phoneMatch = el.innerText.match(/(?:\+91[\-\s]?)?[6-9]\d{4}[\-\s]?\d{5}/);
 
         return {
           business_info: {
             title: name,
-            category: allTextParts[2] || "Business", // Usually category is 3rd line
+            category: allTextParts[2] || "Business",
             link: el.querySelector("a")?.href || "N/A"
           },
           metrics: {
             rating: ratingElement ? ratingElement.split(" ")[0] : "0",
-            total_reviews: ratingElement ? ratingElement.split(" ")[2].replace(/,/g, '') : "0"
+            total_reviews: ratingElement ? ratingElement.split(" ")[2]?.replace(/,/g, '') : "0"
           },
           contact_details: {
             phone: phoneMatch ? phoneMatch[0].replace(/\s/g, '') : "Not Available",
-            address: allTextParts.find(t => t.includes(",") || t.includes("Bareilly")) || "N/A"
+            address: allTextParts.find(t => t.includes(",")) || "N/A"
           }
         };
       });
-    });
+    }, maxLimit);
 
     await browser.close();
 
-    // Clean JSON Response
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).send(JSON.stringify({
+    return res.json({
       status: "success",
       total_found: data.length,
-      search_query: `${keyword} in ${location}`,
       results: data
-    }, null, 2)); // 'null, 2' se JSON readable format mein aayega
+    });
 
   } catch (error) {
     if (browser) await browser.close();
-    res.status(500).json({ status: "error", message: error.message });
+
+    return res.status(500).json({
+      status: "error",
+      message: error.message
+    });
   }
 });
 
-app.listen(3000, () => console.log("JSON Scraper running on http://localhost:3000"));
+app.listen(3000, () => {
+  console.log("🚀 Server running on http://127.0.0.1:3000");
+});
