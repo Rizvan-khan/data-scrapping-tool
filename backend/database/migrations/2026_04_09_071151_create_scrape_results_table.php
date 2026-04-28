@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('website')->nullable();
             $table->string('rating')->nullable();
             $table->string('search_keyword')->nullable();
-$table->string('search_location')->nullable();
+            $table->string('search_location')->nullable();
             $table->timestamps();
         });
     }

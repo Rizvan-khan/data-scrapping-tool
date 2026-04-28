@@ -23,52 +23,54 @@ class ScrapeJob implements ShouldQueue
         $this->data = $data;
     }
 
-    public function handle()
-    {
-        try {
-            \Log::info('🔥 Scrape Job Started');
+   public function handle()
+{
+    try {
+        \Log::info('🔥 Scrape Job Started');
 
-            $response = Http::timeout(180)
-                ->post('http://127.0.0.1:3000/scrape', [
-                    'keyword' => $this->data['keyword'],
-                    'location' => $this->data['location'],
-                    'limit' => $this->data['limit'] ?? 50
-                ]);
+        $response = Http::timeout(240)->post('http://127.0.0.1:3000/scrape', [
+            'keyword' => $this->data['keyword'],
+            'location' => $this->data['location'],
+            'limit' => $this->data['limit'] ?? 50
+        ]);
 
-            if (!$response->successful()) {
-                \Log::error('❌ API Failed', [
-                    'status' => $response->status(),
-                    'body' => $response->body()
-                ]);
-                return;
-            }
-
-            $result = $response->json();
-
-            \Log::info('✅ Data received', ['count' => count($result['results'] ?? [])]);
-
-            if (!isset($result['results']) || empty($result['results'])) {
-                \Log::error('❌ No results found', $result);
-                return;
-            }
-
-            foreach ($result['results'] as $item) {
-                ScrapeResult::create([
-                    'user_id' => $this->data['user_id'],
-                    'title' => $item['business_info']['title'] ?? null,
-                    'category' => $item['business_info']['category'] ?? null,
-                    'rating' => $item['metrics']['rating'] ?? null,
-                    'phone' => $item['contact_details']['phone'] ?? null,
-                    'address' => $item['contact_details']['address'] ?? null,
-                    'link' => $item['business_info']['link'] ?? null,
-                    'search_keyword' => $this->data['keyword'],
-                    'search_location' => $this->data['location'],
-                ]);
-            }
-
-            \Log::info('🔥 Scrape Job Completed');
-        } catch (\Exception $e) {
-            \Log::error('💣 ScrapeJob Error: ' . $e->getMessage());
+        if (!$response->successful()) {
+            \Log::error('❌ Node API Failed', ['body' => $response->body()]);
+            return;
         }
+
+        $result = $response->json();
+        $resultsArray = $result['results'] ?? [];
+
+        \Log::info('✅ Data received', ['count' => count($resultsArray)]);
+
+        if (empty($resultsArray)) {
+            \Log::warning('⚠️ No results to save');
+            return;
+        }
+
+        foreach ($resultsArray as $item) {
+            // Yahan keys wahi honi chahiye jo Node.js bhej raha hai
+            ScrapeResult::create([
+                'user_id'         => $this->data['user_id'],
+                'name'           => $item['name'] ?? 'N/A', // 'name' ki jagah 'title'
+                'email'           => $item['email'] ?? 'Not Available',
+                'phone'           => $item['phone'] ?? 'N/A',
+                'address'         => $item['address'] ?? 'N/A',
+                'city'            => $item['city'] ?? '',
+                'country'         => $item['country'] ?? '',
+                'website'         => $item['website'] ?? 'N/A',
+                'category'        => $item['category'] ?? 'Business',
+                'rating'          => $item['rating'] ?? '0',
+                'review_count'    => $item['review_count'] ?? 0,
+                'search_keyword'  => $this->data['keyword'],
+            ]);
+        }
+
+        \Log::info('🔥 Scrape Job Completed Successfully');
+
+    } catch (\Exception $e) {
+        \Log::error('💣 ScrapeJob Error: ' . $e->getMessage());
     }
+}
 }

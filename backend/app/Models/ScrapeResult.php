@@ -11,16 +11,27 @@ class ScrapeResult extends Model
 
  use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'name',
-        'phone',
-        'address',
-        'website',
-        'rating',
-        'search_keyword',
-        'search_location'
-    ];
+   protected $fillable = [
+    'user_id',
+    'name',
+    'category',
+    'email',
+    'phone',
+    'address',
+    'city',
+    'country',
+    'website',
+    'rating',
+    'review_count',
+    'working_hours',
+    'instagram',
+    'facebook',
+    'search_keyword',
+    'search_location',
+    'link'
+];
+
+// protected $guarded = [];
 
     public function user()
 {
