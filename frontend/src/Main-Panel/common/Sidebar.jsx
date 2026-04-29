@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation,useNavigate } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown,UserCircle } from "lucide-react";
 
 
 const menuData = [
@@ -19,12 +19,25 @@ const menuData = [
   },
   {
     name: "Runs",
-    icon: "▶️",
+    icon: "▶",
     children: [
       // { name: "All Runs", path: "/admin/runs" },
       { name: "History", path: "/admin/runs/history" },
     ],
   },
+
+{
+    name: "Accounts",
+    icon: "▶️",
+    children: [
+      { name: "Profile Information", path: "/admin/accounts/profile" },
+      { name: "Change Password", path: "/admin/accounts/change-password" },
+    ],
+  },
+
+
+
+
 ];
 
 export default function MainSidebar() {

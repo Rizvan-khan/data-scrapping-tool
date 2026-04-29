@@ -7,6 +7,10 @@ import SearchData from './pages/Admin/SearchResult';
 import ProtectedRoute from './routes/ProtectedRoutes';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import UserProfile from './pages/Admin/Profile/UserProfile';
+import UpdateProfile from './pages/Admin/Profile/EditProfile';
+import ChangePassword from './pages/Admin/Profile/ChangePassword';
+
 
 
 
@@ -27,6 +31,9 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="search/data" element={<Create />} />
             <Route path="search/result/data" element={<SearchData />} />
+            <Route path="accounts/profile" element={<UserProfile />} />
+            <Route path="accounts/update-profile" element={<UpdateProfile />} />
+            <Route path="accounts/change-password" element={<ChangePassword />} />
 
           </Route>
 
