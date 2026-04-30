@@ -54,13 +54,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h5 className="font-semibold text-gray-900">Security</h5>
-            <div className="flex gap-3">
-              <div className="px-3 py-1 border border-blue-600 text-blue-600 text-xs font-bold rounded-full">GDPR</div>
-              <div className="px-3 py-1 border border-blue-800 text-blue-800 text-xs font-bold rounded-full">SOC2</div>
-            </div>
-          </div>
+        
         </div>
 
         {/* Right Links Section (8 columns on desktop, nested grid) */}

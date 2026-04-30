@@ -10,6 +10,10 @@ import Register from './pages/Register';
 import UserProfile from './pages/Admin/Profile/UserProfile';
 import UpdateProfile from './pages/Admin/Profile/EditProfile';
 import ChangePassword from './pages/Admin/Profile/ChangePassword';
+import Plans from './pages/Plans/Plans';
+import WebLayouts from './Main-Panel/layouts/WebLayouts';
+import ComingSoon from './pages/CommingSoon';
+import CurrentPlan from './pages/Subscription/CurrentPlan';
 
 
 
@@ -22,6 +26,13 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        
+
+          {/* Layout wrapper */}
+      <Route element={<WebLayouts />}>
+        <Route path="/pricing" element={<Plans />} />
+        <Route path="/commingsoon" element={<ComingSoon />} />
+      </Route>
 
         <Route element={<ProtectedRoute />}>
 
@@ -31,6 +42,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="search/data" element={<Create />} />
             <Route path="search/result/data" element={<SearchData />} />
+            <Route path="subscription" element={<CurrentPlan />} />
             <Route path="accounts/profile" element={<UserProfile />} />
             <Route path="accounts/update-profile" element={<UpdateProfile />} />
             <Route path="accounts/change-password" element={<ChangePassword />} />

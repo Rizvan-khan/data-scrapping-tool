@@ -14,30 +14,44 @@ const actorsData = [
     // users: '358K',
     url: '/login'
   },
-  // {
-  //   id: 2,
-  //   title: 'TikTok Scraper',
-  //   username: 'clockworks/tiktok-scraper',
-  //   description: 'Extract data from TikTok videos, hashtags, and users. Use URLs or search queries to scrape TikTok profiles, hashtags, posts,...',
-  //   icon: '🎵',
-  //   author: 'Clockworks',
-  //   rating: '4.7',
-  //   reviews: '253',
-  //   users: '159K',
-  //   url: '/tiktok-scraper'
-  // },
-  // {
-  //   id: 3,
-  //   title: 'Website Content Crawler',
-  //   username: 'apify/website-content-crawler',
-  //   description: 'Crawl websites and extract text content to feed AI models, LLM applications, vector databases, or RAG pipelines. The Actor...',
-  //   icon: '🕸️',
-  //   author: 'Apify',
-  //   rating: '4.5',
-  //   reviews: '186',
-  //   users: '117K',
-  //   url: '/crawler'
-  // },
+  {
+    id: 2,
+    title: 'TikTok Scraper',
+    username: 'clockworks/tiktok-scraper',
+    description: 'Extract data from TikTok videos, hashtags, and users. Use URLs or search queries to scrape TikTok profiles, hashtags, posts,...',
+    icon: '🎵',
+    // author: 'Clockworks',
+    // rating: '4.7',
+    // reviews: '253',
+    // users: '159K',
+    url: '/commingsoon'
+  },
+  {
+    id: 3,
+    title: 'Website Content Crawler',
+    username: 'srijanweb/website-content-crawler',
+    description: 'Crawl websites and extract text content to feed AI models, LLM applications, vector databases, or RAG pipelines. The Actor...',
+    icon: '🕸️',
+    // author: 'Apify',
+    // rating: '4.5',
+    // reviews: '186',
+    // users: '117K',
+    url: '/commingsoon'
+  },
+
+
+   {
+    id: 4,
+    title: 'Instagram Scraper',
+    username: 'srijanweb/website-content-crawler',
+    description: 'Instagram Scraper is a powerful tool designed to extract data from Instagram profiles, posts, and hashtags. It allows users to gather valuable insights and information from the popular social media platform. With this scraper, you can easily collect data such as profile details, post captions, comments, likes, and more. Whether you are a marketer looking to analyze trends or a researcher studying social media behavior, the Instagram Scraper provides an efficient way to access and utilize Instagram data for your projects.',
+    icon: '🕸️',
+    // author: 'Apify',
+    // rating: '4.5',
+    // reviews: '186',
+    // users: '117K',
+    url: '/commingsoon'
+  },
   // {
   //   id: 4,
   //   title: 'Google Search Results Scr...',
