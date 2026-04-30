@@ -58,6 +58,18 @@ class Plan extends Model
         };
     }
 
+
+public function scopeActive($query)
+{
+    return $query->where('is_active', true);
+}
+
+public function scopeOrdered($query)
+{
+    return $query->orderBy('sort_order')->orderBy('price');
+}
+
+
     public function isFree(): bool
     {
         return $this->price == 0;

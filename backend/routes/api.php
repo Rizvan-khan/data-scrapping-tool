@@ -6,7 +6,10 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\ScrapeController;
 use App\Http\Controllers\Api\AuthController;
-
+use App\Http\Controllers\Api\PlanController;
+use App\Http\Controllers\Api\SubscriptionController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\WebhookController;
 // Route::post('/register', [AuthController::class, 'register']);
 // Route::post('/login', [AuthController::class, 'login']);
 
@@ -32,8 +35,6 @@ use App\Http\Controllers\Api\AuthController;
 // })->middleware('auth:sanctum');
 
 
-use App\Http\Controllers\Api\UserController;
-
 // ─────────────────────────────────────────────
 // PUBLIC ROUTES — No auth needed
 // ─────────────────────────────────────────────
@@ -45,6 +46,11 @@ use App\Http\Controllers\Api\UserController;
 // ─────────────────────────────────────────────
 // PROTECTED ROUTES — Sanctum token required
 // ─────────────────────────────────────────────
+
+// Razorpay Webhook — public (no auth, Razorpay se aata hai)
+Route::post('webhooks/razorpay', [WebhookController::class, 'razorpay']);
+
+
 Route::middleware('auth:sanctum')->group(function () {
 
     // Auth
@@ -71,6 +77,28 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/',         [ScrapeController::class, 'startScraping']);
         Route::get('/results',   [ScrapeController::class, 'getResults']);
         Route::delete('/results/{id}', [ScrapeController::class, 'deleteResult']);
+    });
+
+
+    // Plans — public (anyone can view)
+Route::prefix('plans')->group(function () {
+    Route::get('/',        [PlanController::class, 'index']);   // GET /api/plans
+    Route::get('/{slug}',  [PlanController::class, 'show']);    // GET /api/plans/pro-monthly
+});
+
+
+ // Subscriptions
+    Route::prefix('subscriptions')->group(function () {
+        Route::post('create-order',    [SubscriptionController::class, 'createOrder']);
+        Route::post('verify-payment',  [SubscriptionController::class, 'verifyPayment']);
+        Route::get('current',          [SubscriptionController::class, 'current']);
+        Route::post('cancel',          [SubscriptionController::class, 'cancel']);
+        Route::get('invoices',         [SubscriptionController::class, 'invoices']);
+    });
+
+
+  Route::middleware('admin')->prefix('admin')->group(function () {
+        Route::post('plans', [PlanController::class, 'store']); // POST /api/admin/plans
     });
 
 });
