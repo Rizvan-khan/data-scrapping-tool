@@ -14,6 +14,7 @@ import Plans from './pages/Plans/Plans';
 import WebLayouts from './Main-Panel/layouts/WebLayouts';
 import ComingSoon from './pages/CommingSoon';
 import CurrentPlan from './pages/Subscription/CurrentPlan';
+import History from './pages/Admin/History';
 
 
 
@@ -42,6 +43,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="search/data" element={<Create />} />
             <Route path="search/result/data" element={<SearchData />} />
+            <Route path="search/history" element={<History />} />
             <Route path="subscription" element={<CurrentPlan />} />
             <Route path="accounts/profile" element={<UserProfile />} />
             <Route path="accounts/update-profile" element={<UpdateProfile />} />

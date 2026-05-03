@@ -19,7 +19,7 @@ const menuData = [
     name: "Runs",
     icon: "▶",
     children: [
-      { name: "History", path: "/admin/runs/history" },
+      { name: "Search History", path: "/admin/search/history" },
     ],
   },
   {
