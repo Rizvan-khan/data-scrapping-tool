@@ -73,12 +73,22 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Scraper (existing — untouched)
-    Route::prefix('scrape')->group(function () {
-        Route::post('/',         [ScrapeController::class, 'startScraping']);
-        Route::get('/results',   [ScrapeController::class, 'getResults']);
-        Route::delete('/results/{id}', [ScrapeController::class, 'deleteResult']);
-    });
+    // Route::prefix('scrape')->group(function () {
+    //     Route::post('/',         [ScrapeController::class, 'startScraping']);
+    //     Route::get('/results',   [ScrapeController::class, 'getResults']);
+    //     Route::delete('/results/{id}', [ScrapeController::class, 'deleteResult']);
+    // });
 
+    // Scraper
+Route::prefix('scrape')->group(function () {
+    Route::post('/',                              [ScrapeController::class, 'startScraping']);   // Scraping shuru karo
+    Route::get('/history',                        [ScrapeController::class, 'history']);          // Sab past sessions
+    Route::get('/sessions/{sessionId}/status',    [ScrapeController::class, 'sessionStatus']);    // Session progress
+    Route::get('/sessions/{sessionId}/results',   [ScrapeController::class, 'sessionResults']);   // Session ke results
+    Route::delete('/sessions/{sessionId}',        [ScrapeController::class, 'deleteSession']);    // Session delete
+    Route::get('/results',                        [ScrapeController::class, 'allResults']);       // Sab results
+    Route::delete('/results/{id}',                [ScrapeController::class, 'deleteResult']);     // Single result delete
+});
 
     // Plans — public (anyone can view)
 Route::prefix('plans')->group(function () {
